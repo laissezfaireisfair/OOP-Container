@@ -6,6 +6,9 @@ namespace Bicycle{
   template <class T> using uPtr<T> = std::unique_ptr<T>;
   using usInt = std::uint64_t;
 
+  template <class T> Container::Container();
+  template <class T> Container::Container(Container const & other);
+  template <class T> Container::Container(T const value, usInt const size);
   template <class T> T Container::get_back() const;
   template <class T> T Container::get_front() const;
   template <class T> T Container::operator[](usInt const i);
@@ -16,4 +19,5 @@ namespace Bicycle{
   template <class T> void Container::pop_back(T const elem);
   template <class T> void Container::pop_front(T const elem);
   template <class T> void Container::clean();
+  template <class T>Container::~Container();
 }
