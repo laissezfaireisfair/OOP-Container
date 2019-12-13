@@ -1,4 +1,5 @@
 #pragma once
+#include <memory>
 #include <cstdint>
 
 namespace Bicycle{
@@ -14,5 +15,8 @@ namespace Bicycle{
     void pop_back(T const elem);
     void pop_front(T const elem);
     void clean();
+  private:
+    std::uint64_t length;
+    std::shared_ptr<T[]> body;
   };
 }
