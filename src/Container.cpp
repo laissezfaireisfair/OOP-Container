@@ -48,5 +48,8 @@ namespace Bicycle{
   template <class T> void Container::push_front(T const elem);
   template <class T> void Container::pop_back(T const elem);
   template <class T> void Container::pop_front(T const elem);
-  template <class T> void Container::clean();
+  template <class T> void Container::clean() {
+    length = 0;
+    body = sPtr<T[]>(new T[0], std::default_delete<T[]>());
+  }
 }
