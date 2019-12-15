@@ -10,7 +10,7 @@ namespace Bicycle{
     Container(T const value, std::uint64_t const size);
     T get_back() const;
     T get_front() const;
-    T operator[](std::uint64_t const i);
+    T &operator[](std::uint64_t const i) const;
     std::uint64_t get_length() const;
     bool is_empty() const;
     void push_back(T const elem);

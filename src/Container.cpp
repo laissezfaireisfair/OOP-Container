@@ -38,10 +38,11 @@ namespace Bicycle{
     return body[0];
   }
 
-  template <class T> T Container<T>::operator[](usInt const i) {
+  template <class T> T &Container<T>::operator[](usInt const i) const {
     if (i >= length)
       throw std::out_of_range("Container size is less than adress");
-    return body[0];
+    T & ref = body[i];
+    return ref;
   }
 
   template <class T> usInt Container<T>::get_length() const {
