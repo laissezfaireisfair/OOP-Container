@@ -65,7 +65,7 @@ namespace Bicycle{
   template <class T> void Container<T>::push_front(T const elem) {
     sPtr<T[]> newBody = sPtr<T[]>(new T[length+1], std::default_delete<T[]>());
     for (unsigned int i = 0; i < length; ++i)
-      newBody[i] = body[i + 1];
+      newBody[i + 1] = body[i];
     newBody[0] = elem;
     body = newBody;
     length++;
