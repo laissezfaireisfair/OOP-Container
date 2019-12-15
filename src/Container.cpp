@@ -9,7 +9,7 @@ namespace Bicycle{
 
   template <class T> Container::Container() {
     length = 0;
-    body = sPtr<T[]>(new T[0], std::default_delete<T[]>());
+    body = sPtr<T[]>(new T[length], std::default_delete<T[]>());
   }
   template <class T> Container::Container(Container const & other) {
     length = other.length;
@@ -18,7 +18,7 @@ namespace Bicycle{
       body[i] = other.body[i];
   }
   template <class T> Container::Container(T const value, usInt const size) {
-    length = amount;
+    length = size;
     body = sPtr<T[]>(new T[length], std::default_delete<T[]>());
     for (usInt i = 0; i < length; ++i)
       body[i] = value;
@@ -46,10 +46,24 @@ namespace Bicycle{
   }
   template <class T> void Container::push_back(T const elem);
   template <class T> void Container::push_front(T const elem);
-  template <class T> void Container::pop_back(T const elem);
-  template <class T> void Container::pop_front(T const elem);
+  template <class T> void Container::pop_back(T const elem) {
+    if (length == 0)
+      throw std::length_error("Zero length container dont have back elem");
+    sPtr<T[]> newBody = sPtr<T[]>(new T[length-1], std::default_delete<T[]>());
+    for (unsigned int i = 0; i < length - 1; ++i)
+      newBody[i] = body[i];
+    body = newBody;
+  }
+  template <class T> void Container::pop_front(T const elem) {
+    if (length == 0)
+      throw std::length_error("Zero length container dont have front elem");
+      sPtr<T[]> newBody = sPtr<T[]>(new T[length-1], std::default_delete<T[]>());
+      for (unsigned int i = 0; i < length - 1; ++i)
+        newBody[i] = body[i + 1];
+      body = newBody;
+  }
   template <class T> void Container::clean() {
     length = 0;
-    body = sPtr<T[]>(new T[0], std::default_delete<T[]>());
+    body = sPtr<T[]>(new T[length], std::default_delete<T[]>());
   }
 }

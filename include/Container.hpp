@@ -15,8 +15,8 @@ namespace Bicycle{
     bool is_empty() const;
     void push_back(T const elem);
     void push_front(T const elem);
-    void pop_back(T const elem);
-    void pop_front(T const elem);
+    void pop_back();
+    void pop_front();
     void clean();
   private:
     std::uint64_t length;
