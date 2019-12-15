@@ -59,6 +59,7 @@ namespace Bicycle{
       newBody[i] = body[i];
     newBody[length] = elem;
     body = newBody;
+    length++;
   }
 
   template <class T> void Container<T>::push_front(T const elem) {
@@ -67,6 +68,7 @@ namespace Bicycle{
       newBody[i] = body[i + 1];
     newBody[0] = elem;
     body = newBody;
+    length++;
   }
 
   template <class T> void Container<T>::pop_back() {
@@ -76,6 +78,7 @@ namespace Bicycle{
     for (unsigned int i = 0; i < length - 1; ++i)
       newBody[i] = body[i];
     body = newBody;
+    length--;
   }
 
   template <class T> void Container<T>::pop_front() {
@@ -85,6 +88,7 @@ namespace Bicycle{
     for (unsigned int i = 0; i < length - 1; ++i)
       newBody[i] = body[i + 1];
     body = newBody;
+    length--;
   }
 
   template <class T> void Container<T>::clean() {
