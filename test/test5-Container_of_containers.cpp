@@ -1,5 +1,4 @@
 #include "../include/Container.hpp"
-#include "../src/Container.cpp"
 #include <cstdint>
 #include <iostream>
 using namespace std;
@@ -30,6 +29,6 @@ int main() {
   }
   cout << "Printing matrix..." << endl;
   print_matrix(matrix);
-  cout << "Matrix printed." << endl; 
+  cout << "Matrix printed." << endl;
   return 0;
 }
