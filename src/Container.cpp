@@ -19,20 +19,20 @@ namespace Bicycle{
       body[i] = other.body[i];
   }
 
-  template <class T> Container<T>::Container(T const value, usInt const size) {
+  template <class T> Container<T>::Container(T const & value, usInt const size) {
     length = size;
     body = sPtr<T[]>(new T[length], std::default_delete<T[]>());
     for (usInt i = 0; i < length; ++i)
       body[i] = value;
   }
 
-  template <class T> T Container<T>::get_back() const {
+  template <class T> T &Container<T>::get_back() const {
     if (length == 0)
       throw std::length_error("Zero length container dont have back elem");
     return body[length - 1];
   }
 
-  template <class T> T Container<T>::get_front() const {
+  template <class T> T &Container<T>::get_front() const {
     if (length == 0)
       throw std::length_error("Zero length container dont have front elem");
     return body[0];
@@ -53,20 +53,11 @@ namespace Bicycle{
     return length == 0;
   }
 
-  template <class T> void Container<T>::push_back(T const elem) {
+  template <class T> void Container<T>::push_back(T const  &elem) {
     sPtr<T[]> newBody = sPtr<T[]>(new T[length+1], std::default_delete<T[]>());
     for (unsigned int i = 0; i < length; ++i)
       newBody[i] = body[i];
     newBody[length] = elem;
-    body = newBody;
-    length++;
-  }
-
-  template <class T> void Container<T>::push_front(T const elem) {
-    sPtr<T[]> newBody = sPtr<T[]>(new T[length+1], std::default_delete<T[]>());
-    for (unsigned int i = 0; i < length; ++i)
-      newBody[i + 1] = body[i];
-    newBody[0] = elem;
     body = newBody;
     length++;
   }
@@ -77,16 +68,6 @@ namespace Bicycle{
     sPtr<T[]> newBody = sPtr<T[]>(new T[length-1], std::default_delete<T[]>());
     for (unsigned int i = 0; i < length - 1; ++i)
       newBody[i] = body[i];
-    body = newBody;
-    length--;
-  }
-
-  template <class T> void Container<T>::pop_front() {
-    if (length == 0)
-      throw std::length_error("Zero length container dont have front elem");
-    sPtr<T[]> newBody = sPtr<T[]>(new T[length-1], std::default_delete<T[]>());
-    for (unsigned int i = 0; i < length - 1; ++i)
-      newBody[i] = body[i + 1];
     body = newBody;
     length--;
   }

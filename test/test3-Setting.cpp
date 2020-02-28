@@ -20,9 +20,6 @@ int main() {
   cout << "Setting first elem 54..." << endl << endl;
   vec[0] = 54;
   print_int_container(vec);
-  cout << "Pop first elem..." << endl << endl;
-  vec.pop_front();
-  print_int_container(vec);
   cout << "Pop back elem..." << endl << endl;
   vec.pop_back();
   print_int_container(vec);
@@ -30,10 +27,7 @@ int main() {
   vec.clean();
   print_int_container(vec);
   cout << "Push back 14..." << endl << endl;
-  vec.push_front(14);
-  print_int_container(vec);
-  cout << "Push front 37..." << endl << endl;
-  vec.push_front(37);
+  vec.push_back(14);
   print_int_container(vec);
   cout << "vec[0] *= 2..." << endl << endl;
   vec[0] *= 2;
