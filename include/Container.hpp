@@ -29,8 +29,8 @@ namespace Bicycle{
         body[i] = other.body[i];
     }
 
-    Container(T const & value, unsigned int const size) {
-      length = size;
+    Container(T const & value, unsigned int const lengthReq) {
+      length = lengthReq;
       capacity = length + 1;
       body = sPtr<T[]>(new T[capacity], std::default_delete<T[]>());
       for (usInt i = 0; i < length; ++i)
@@ -93,6 +93,27 @@ namespace Bicycle{
     void clean() {
       while(!is_empty())
         pop_back();
+    }
+
+    void resize(unsigned int lengthReq) {
+      if (length < lengthReq)
+        for (;length < lengthReq; push_back(T()));
+      else
+        for (;length > lengthReq; pop_back());
+    }
+
+    void reserve(unsigned int capacityReq) {
+      if (capacityReq < capacity)
+        return;
+      sPtr<T[]> newBody = sPtr<T[]>(new T[capacityReq], std::default_delete<T[]>());
+      for (usInt i = 0; i < length; ++i, newBody[i] = body[i]);
+      body = newBody;
+    }
+
+    void shrink_to_fit() {
+      sPtr<T[]> newBody = sPtr<T[]>(new T[length], std::default_delete<T[]>());
+      for (usInt i = 0; i < length; ++i, newBody[i] = body[i]);
+      body = newBody;
     }
 
   private:

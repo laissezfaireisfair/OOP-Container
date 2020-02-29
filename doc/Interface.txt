@@ -14,3 +14,6 @@ class Container interface:
   void push_back(T const & elem);
   void pop_back();
   void clean();
+  void resize(unsigned int lengthReq);
+  void reserve(unsigned int capacityReq);
+  void shrink_to_fit();

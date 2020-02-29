@@ -2,6 +2,9 @@ CC = g++
 CFLAGS = -Wall -pedantic -std=c++11
 
 
+
+test: test1 test2 test3 test4 test5
+
 run: test
 	echo "Running test 1...\n"
 	./build/test1.out
@@ -14,8 +17,6 @@ run: test
 	echo "\nTest 4 input end. Running test 5...\n"
 	./build/test5.out
 	echo "\nTest 5 input end.\n"
-
-test: test1 test2 test3 test4 test5
 
 clean:
 	rm -rf build/*
