@@ -18,7 +18,7 @@ namespace Bicycle{
       body = sPtr<T[]>(new T[capacity], std::default_delete<T[]>());
     }
 
-    Container(usInt const capacityReq) {
+    Container(unsigned int const capacityReq) {
       length = 0;
       capacity = capacityReq;
       body = sPtr<T[]>(new T[capacity], std::default_delete<T[]>());
@@ -32,7 +32,7 @@ namespace Bicycle{
         body[i] = other.body[i];
     }
 
-    Container(T const & value, std::uint64_t const size) {
+    Container(T const & value, unsigned int const size) {
       length = size;
       capacity = length + 1;
       body = sPtr<T[]>(new T[capacity], std::default_delete<T[]>());
@@ -52,7 +52,7 @@ namespace Bicycle{
       return body[0];
     }
 
-    T &operator[](std::uint64_t const i) const {
+    T &operator[](unsigned int const i) const {
       if (i >= length)
         throw std::out_of_range("Container size is less than adress");
       T & ref = body[i];
