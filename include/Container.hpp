@@ -2,6 +2,7 @@
 #include <memory>
 #include <cstdint>
 #include <stdexcept>
+#include <cstdlib>
 
 namespace Bicycle{
   template <class T> using sPtr = std::shared_ptr<T>;
@@ -13,17 +14,25 @@ namespace Bicycle{
   public:
     Container() {
       length = 0;
-      body = sPtr<T[]>(new T[length], std::default_delete<T[]>());
+      capacity = length + 1;
+      body = sPtr<T[]>(new T[capacity], std::default_delete<T[]>());
+    }
+    Container(usInt const capacityReq) {
+      length = 0;
+      capacity = capacityReq;
+      body = sPtr<T[]>(new T[capacity], std::default_delete<T[]>());
     }
     Container(Container const & other) {
       length = other.length;
-      body = sPtr<T[]>(new T[length], std::default_delete<T[]>());
+      capacity = length + 1;
+      body = sPtr<T[]>(new T[capacity], std::default_delete<T[]>());
       for (usInt i = 0; i < length; ++i)
         body[i] = other.body[i];
     }
     Container(T const & value, std::uint64_t const size) {
       length = size;
-      body = sPtr<T[]>(new T[length], std::default_delete<T[]>());
+      capacity = length + 1;
+      body = sPtr<T[]>(new T[capacity], std::default_delete<T[]>());
       for (usInt i = 0; i < length; ++i)
         body[i] = value;
     }
@@ -46,32 +55,39 @@ namespace Bicycle{
     std::uint64_t get_length() const {
       return length;
     }
+    std::uint64_t get_capacity() const {
+      return capacity;
+    }
     bool is_empty() const {
       return length == 0;
     }
     void push_back(T const & elem) {
-      sPtr<T[]> newBody = sPtr<T[]>(new T[length+1], std::default_delete<T[]>());
-      for (unsigned int i = 0; i < length; ++i)
+      if (capacity > length) {
+        body[length] = elem;
+        ++length;
+        return;
+      }
+      capacity *= 2;
+      sPtr<T[]> newBody = sPtr<T[]>(new T[capacity], std::default_delete<T[]>());
+      for (usInt i = 0; i < length; ++i)
         newBody[i] = body[i];
       newBody[length] = elem;
-      body = newBody;
       length++;
+      body = newBody;
     }
     void pop_back() {
       if (length == 0)
         throw std::length_error("Zero length container dont have back elem");
-      sPtr<T[]> newBody = sPtr<T[]>(new T[length-1], std::default_delete<T[]>());
-      for (unsigned int i = 0; i < length - 1; ++i)
-        newBody[i] = body[i];
-      body = newBody;
-      length--;
+      body[length - 1].~T();
+      --length;
     }
     void clean() {
-      length = 0;
-      body = sPtr<T[]>(new T[length], std::default_delete<T[]>());
+      while(!is_empty())
+        pop_back();
     }
   private:
-    std::uint64_t length;
+    usInt length;
+    usInt capacity;
     std::shared_ptr<T[]> body;
   };
 }

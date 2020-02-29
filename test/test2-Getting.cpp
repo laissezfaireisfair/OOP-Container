@@ -14,6 +14,7 @@ int main() {
   cout << "Making vec of five (666)s..." << endl;
   Container<int> vec(666, 5);
   cout << "Length: " << vec.get_length() << endl;
+  cout << "Capacity: " << vec.get_capacity() << endl;
   cout << "Is empty: " << (vec.is_empty() ? "True" : "False") << endl;
   cout << "Front value: " << vec.get_front() << endl;
   cout << "Back value: " << vec.get_back() << endl;
