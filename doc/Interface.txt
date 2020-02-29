@@ -1,0 +1,16 @@
+In namespace Bicycle.
+
+class Container interface:
+  Container();
+  Container(usInt const capacityReq);
+  Container(Container const & other);
+  Container(T const & value, std::uint64_t const size);
+  T &get_back() const;
+  T &get_front() const;
+  T &operator[](std::uint64_t const i) const;
+  std::uint64_t get_length() const;
+  std::uint64_t get_capacity() const;
+  bool is_empty() const;
+  void push_back(T const & elem);
+  void pop_back();
+  void clean();
