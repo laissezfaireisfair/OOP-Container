@@ -3,7 +3,7 @@ CFLAGS = -Wall -pedantic -std=c++11
 
 
 
-test: test1 test2 test3 test4 test5
+test: test1 test2 test3 test4 test5 test6
 
 run: test
 	echo "Running test 1...\n"
@@ -16,7 +16,9 @@ run: test
 	./build/test4.out
 	echo "\nTest 4 input end. Running test 5...\n"
 	./build/test5.out
-	echo "\nTest 5 input end.\n"
+	echo "\nTest 5 input end. Running test 6...\n"
+	./build/test6.out
+	echo "\nTest 6 input end.\n"
 
 clean:
 	rm -rf build/*
@@ -31,6 +33,8 @@ test4: build/test4.out
 
 test5: build/test5.out
 
+test6: build/test6.out
+
 build/test1.out: test/test1*.cpp include/Container.hpp
 	$(CC) $(CFLAGS) -g $< -o $@ -I include/
 
@@ -44,4 +48,7 @@ build/test4.out: test/test4*.cpp include/Container.hpp
 	$(CC) $(CFLAGS) -g $< -o $@ -I include/
 
 build/test5.out: test/test5*.cpp include/Container.hpp
+	$(CC) $(CFLAGS) -g $< -o $@ -I include/
+
+build/test6.out: test/test6*.cpp include/Container.hpp
 	$(CC) $(CFLAGS) -g $< -o $@ -I include/
