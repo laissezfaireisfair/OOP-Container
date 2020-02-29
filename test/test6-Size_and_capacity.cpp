@@ -83,7 +83,7 @@ int main() {
 
   UI::shrinkToFitTesting();
   vec2.shrink_to_fit();
-  if (vec.get_length() == 1 && vec.get_capacity() == 1)
+  if (vec2.get_length() == 1 && vec2.get_capacity() == 1)
     UI::ok();
   else {
     UI::wrong();

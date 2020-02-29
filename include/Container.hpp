@@ -95,25 +95,27 @@ namespace Bicycle{
         pop_back();
     }
 
-    void resize(unsigned int lengthReq) {
+    void resize(unsigned int const lengthReq) {
       if (length < lengthReq)
         for (;length < lengthReq; push_back(T()));
       else
         for (;length > lengthReq; pop_back());
     }
 
-    void reserve(unsigned int capacityReq) {
-      if (capacityReq < capacity)
+    void reserve(unsigned int const capacityReq) {
+      if (capacityReq <= capacity)
         return;
       sPtr<T[]> newBody = sPtr<T[]>(new T[capacityReq], std::default_delete<T[]>());
-      for (usInt i = 0; i < length; ++i, newBody[i] = body[i]);
+      for (usInt i = 0; i < length; newBody[i] = body[i], ++i);
       body = newBody;
+      capacity = capacityReq;
     }
 
     void shrink_to_fit() {
       sPtr<T[]> newBody = sPtr<T[]>(new T[length], std::default_delete<T[]>());
-      for (usInt i = 0; i < length; ++i, newBody[i] = body[i]);
+      for (usInt i = 0; i < length; newBody[i] = body[i], ++i);
       body = newBody;
+      capacity = length;
     }
 
   private:
