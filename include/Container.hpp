@@ -2,12 +2,9 @@
 #include <memory>
 #include <cstdint>
 #include <stdexcept>
-#include <cstdlib>
 
 namespace Bicycle{
   template <class T> using sPtr = std::shared_ptr<T>;
-  template <class T> using wPtr = std::weak_ptr<T>;
-  template <class T> using uPtr = std::unique_ptr<T>;
   using usInt = std::uint64_t;
 
   template <class T> class Container {
