@@ -4,7 +4,6 @@
 #include <stdexcept>
 
 namespace Bicycle{
-  template <class T> using sPtr = std::shared_ptr<T>;
   using usInt = std::uint64_t;
 
   template <class T> class Container {
@@ -12,19 +11,30 @@ namespace Bicycle{
     Container() {
       length = 0;
       capacity = length + 1;
-      body = sPtr<T[]>(new T[capacity], std::default_delete<T[]>());
+      memPool = new char[sizeof(T) * capacity];
+      if (memPool == nullptr)
+        throw std::runtime_error("Memory cannot be allocated.");
+      body = NULL;
     }
 
     Container(unsigned int const capacityReq) {
       length = 0;
       capacity = capacityReq;
-      body = sPtr<T[]>(new T[capacity], std::default_delete<T[]>());
+      memPool = new char[sizeof(T) * capacity];
+      if (memPool == nullptr)
+        throw std::runtime_error("Memory cannot be allocated.");
+      body = NULL;
     }
 
     Container(Container const & other) {
       length = other.length;
       capacity = length + 1;
-      body = sPtr<T[]>(new T[capacity], std::default_delete<T[]>());
+      memPool = new char[sizeof(T) * capacity];
+      if (memPool == nullptr)
+        throw std::runtime_error("Memory cannot be allocated.");
+      body = new (memPool) T[length];
+      if (body == nullptr)
+        throw std::runtime_error("Constructing objects failed.");
       for (usInt i = 0; i < length; ++i)
         body[i] = other.body[i];
     }
@@ -32,9 +42,20 @@ namespace Bicycle{
     Container(T const & value, unsigned int const lengthReq) {
       length = lengthReq;
       capacity = length + 1;
-      body = sPtr<T[]>(new T[capacity], std::default_delete<T[]>());
+      memPool = new char[sizeof(T) * capacity];
+      if (memPool == nullptr)
+        throw std::runtime_error("Memory cannot be allocated.");
+      body = new (memPool) T[length];
+      if (body == nullptr)
+        throw std::runtime_error("Constructing objects failed.");
       for (usInt i = 0; i < length; ++i)
         body[i] = value;
+    }
+
+    ~Container() {
+      for (usInt i = 0; i < length; ++i)
+        body[i].~T();
+      delete []memPool;
     }
 
     T &get_back() const {
@@ -49,7 +70,7 @@ namespace Bicycle{
       return body[0];
     }
 
-    T &operator[](unsigned int const i) const {
+    T &operator[](usInt const i) const {
       if (i >= length)
         throw std::out_of_range("Container size is less than adress");
       T & ref = body[i];
@@ -75,12 +96,19 @@ namespace Bicycle{
         return;
       }
       capacity *= 2;
-      sPtr<T[]> newBody = sPtr<T[]>(new T[capacity], std::default_delete<T[]>());
+      char *newMemPool = new char[sizeof(T) * capacity];
+      if (newMemPool == nullptr)
+        throw std::runtime_error("Memory cannot be allocated.");
+      T *newBody = new (newMemPool) T[length];
+      if (newBody == nullptr)
+        throw std::runtime_error("Constructing objects failed.");
       for (usInt i = 0; i < length; ++i)
         newBody[i] = body[i];
       newBody[length] = elem;
       length++;
       body = newBody;
+      delete []memPool;
+      memPool = newMemPool;
     }
 
     void pop_back() {
@@ -97,30 +125,45 @@ namespace Bicycle{
 
     void resize(unsigned int const lengthReq) {
       if (length < lengthReq)
-        for (;length < lengthReq; push_back(T()));
+        for (;length < lengthReq; push_back(T())) {}
       else
-        for (;length > lengthReq; pop_back());
+        for (;length > lengthReq; pop_back()) {}
     }
 
     void reserve(unsigned int const capacityReq) {
       if (capacityReq <= capacity)
         return;
-      sPtr<T[]> newBody = sPtr<T[]>(new T[capacityReq], std::default_delete<T[]>());
-      for (usInt i = 0; i < length; newBody[i] = body[i], ++i);
+      char *newMemPool = new char[sizeof(T) * capacityReq];
+      if (newMemPool == nullptr)
+        throw std::runtime_error("Memory cannot be allocated.");
+      T *newBody = new (newMemPool) T[length];
+      if (newBody == nullptr)
+        throw std::runtime_error("Constructing objects failed.");
+      for (usInt i = 0; i < length; newBody[i] = body[i], ++i) {}
       body = newBody;
       capacity = capacityReq;
+      delete []body;
+      body = newBody;
     }
 
     void shrink_to_fit() {
-      sPtr<T[]> newBody = sPtr<T[]>(new T[length], std::default_delete<T[]>());
-      for (usInt i = 0; i < length; newBody[i] = body[i], ++i);
-      body = newBody;
+      char *newMemPool = new char[sizeof(T) * capacity];
+      if (memPool == nullptr)
+        throw std::runtime_error("Memory cannot be allocated.");
+      T *newBody = new (newMemPool) T(length);
+      if (newBody == nullptr)
+        throw std::runtime_error("Constructing objects failed.");
+      for (usInt i = 0; i < length; newBody[i] = body[i], ++i) {}
+        body = newBody;
       capacity = length;
+      delete []body;
+      body = newBody;
     }
 
   private:
     usInt length;
     usInt capacity;
-    std::shared_ptr<T[]> body;
+    char *memPool;
+    T *body;
   };
 }

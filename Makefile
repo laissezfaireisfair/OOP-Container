@@ -3,9 +3,9 @@ CFLAGS = -Wall -pedantic -std=c++11
 
 
 
-test: test1 test2 test3 test4 test5 test6
+build: test1 test2 test3 test4 test5 test6
 
-run: test
+run: build
 	echo "Running test 1...\n"
 	./build/test1.out
 	echo "\nTest 1 input end. Running test 2...\n"
