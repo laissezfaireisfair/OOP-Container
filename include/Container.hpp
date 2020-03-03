@@ -160,6 +160,23 @@ namespace Bicycle{
       body = newBody;
     }
 
+    T & operator= (T const & other) {
+      for (usInt i = 0; i < length; ++i)
+        body[i].~T();
+      delete []memPool;
+      length = other.length;
+      capacity = length + 1;
+      memPool = new char[sizeof(T) * capacity];
+      if (memPool == nullptr)
+        throw std::runtime_error("Memory cannot be allocated.");
+      body = new (memPool) T[length];
+      if (body == nullptr)
+        throw std::runtime_error("Constructing objects failed.");
+      for (usInt i = 0; i < length; ++i)
+        body[i] = other.body[i];
+      return (*this);
+    }
+
   private:
     usInt length;
     usInt capacity;
