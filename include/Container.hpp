@@ -91,6 +91,8 @@ namespace Bicycle{
 
     void push_back(T const & elem) {
       if (capacity > length) {
+        if (body == NULL)
+          body = new (memPool) T;
         body[length] = elem;
         ++length;
         return;
