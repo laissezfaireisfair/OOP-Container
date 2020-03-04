@@ -160,7 +160,7 @@ namespace Bicycle{
       body = newBody;
     }
 
-    T & operator= (T const & other) {
+    Container<T> & operator= (Container<T> const & other) {
       for (usInt i = 0; i < length; ++i)
         body[i].~T();
       delete []memPool;
