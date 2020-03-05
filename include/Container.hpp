@@ -121,15 +121,21 @@ namespace Bicycle{
     }
 
     void clean() {
-      while(!is_empty())
-        pop_back();
+      for (; length > 0; --length)
+        body[length - 1].~T();
     }
 
     void resize(unsigned int const lengthReq) {
-      if (length < lengthReq)
-        for (;length < lengthReq; push_back(T())) {}
-      else
-        for (;length > lengthReq; pop_back()) {}
+      if (length >= lengthReq) {
+        for (;length > lengthReq; body[length - 1].~T(), --length) {}
+        return;
+      }
+      reserve(lengthReq); // If capacity is enough it won't do anything
+      if (body == NULL) {
+        body = new (memPool) T[lengthReq];
+        length = lengthReq;
+      } else
+        for (; length < lengthReq; body[length] = T(), ++length) {}
     }
 
     void reserve(unsigned int const capacityReq) {
