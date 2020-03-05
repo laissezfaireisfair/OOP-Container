@@ -32,9 +32,7 @@ namespace Bicycle{
       memPool = new char[sizeof(T) * capacity];
       if (memPool == nullptr)
         throw std::runtime_error("Memory cannot be allocated.");
-      body = new (memPool) T[length];
-      if (body == nullptr)
-        throw std::runtime_error("Constructing objects failed.");
+      body = new (memPool) T;
       for (usInt i = 0; i < length; ++i)
         body[i] = other.body[i];
     }
@@ -45,9 +43,7 @@ namespace Bicycle{
       memPool = new char[sizeof(T) * capacity];
       if (memPool == nullptr)
         throw std::runtime_error("Memory cannot be allocated.");
-      body = new (memPool) T[length];
-      if (body == nullptr)
-        throw std::runtime_error("Constructing objects failed.");
+      body = new (memPool) T;
       for (usInt i = 0; i < length; ++i)
         body[i] = value;
     }
@@ -101,9 +97,7 @@ namespace Bicycle{
       char *newMemPool = new char[sizeof(T) * capacity];
       if (newMemPool == nullptr)
         throw std::runtime_error("Memory cannot be allocated.");
-      T *newBody = new (newMemPool) T[length];
-      if (newBody == nullptr)
-        throw std::runtime_error("Constructing objects failed.");
+      T *newBody = new (newMemPool) T;
       for (usInt i = 0; i < length; ++i)
         newBody[i] = body[i];
       newBody[length] = elem;
@@ -144,9 +138,7 @@ namespace Bicycle{
       char *newMemPool = new char[sizeof(T) * capacityReq];
       if (newMemPool == nullptr)
         throw std::runtime_error("Memory cannot be allocated.");
-      T *newBody = new (newMemPool) T[length];
-      if (newBody == nullptr)
-        throw std::runtime_error("Constructing objects failed.");
+      T *newBody = new (newMemPool) T;
       for (usInt i = 0; i < length; newBody[i] = body[i], ++i) {}
       body = newBody;
       capacity = capacityReq;
@@ -158,9 +150,7 @@ namespace Bicycle{
       char *newMemPool = new char[sizeof(T) * capacity];
       if (memPool == nullptr)
         throw std::runtime_error("Memory cannot be allocated.");
-      T *newBody = new (newMemPool) T(length);
-      if (newBody == nullptr)
-        throw std::runtime_error("Constructing objects failed.");
+      T *newBody = new (newMemPool) T;
       for (usInt i = 0; i < length; newBody[i] = body[i], ++i) {}
         body = newBody;
       capacity = length;
@@ -177,9 +167,7 @@ namespace Bicycle{
       memPool = new char[sizeof(T) * capacity];
       if (memPool == nullptr)
         throw std::runtime_error("Memory cannot be allocated.");
-      body = new (memPool) T[length];
-      if (body == nullptr)
-        throw std::runtime_error("Constructing objects failed.");
+      body = new (memPool) T;
       for (usInt i = 0; i < length; ++i)
         body[i] = other.body[i];
       return (*this);
