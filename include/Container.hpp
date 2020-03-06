@@ -14,7 +14,7 @@ namespace Bicycle{
       memPool = new char[sizeof(T) * capacity];
       if (memPool == nullptr)
         throw std::runtime_error("Memory cannot be allocated.");
-      body = NULL;
+      body = reinterpret_cast<T*>(memPool);
     }
 
     Container(unsigned int const capacityReq) {
@@ -23,7 +23,7 @@ namespace Bicycle{
       memPool = new char[sizeof(T) * capacity];
       if (memPool == nullptr)
         throw std::runtime_error("Memory cannot be allocated.");
-      body = NULL;
+      body = reinterpret_cast<T*>(memPool);
     }
 
     Container(Container const & other) {
@@ -32,7 +32,7 @@ namespace Bicycle{
       memPool = new char[sizeof(T) * capacity];
       if (memPool == nullptr)
         throw std::runtime_error("Memory cannot be allocated.");
-      body = new (memPool) T;
+      body = reinterpret_cast<T*>(memPool);
       for (usInt i = 0; i < length; ++i)
         body[i] = other.body[i];
     }
@@ -43,15 +43,13 @@ namespace Bicycle{
       memPool = new char[sizeof(T) * capacity];
       if (memPool == nullptr)
         throw std::runtime_error("Memory cannot be allocated.");
-      body = new (memPool) T;
+      body = reinterpret_cast<T*>(memPool);
       for (usInt i = 0; i < length; ++i)
         body[i] = value;
     }
 
     ~Container() {
-      for (usInt i = 0; i < length; ++i)
-        body[i].~T();
-      delete []memPool;
+      deinitialise();
     }
 
     T &get_back() const {
@@ -87,24 +85,24 @@ namespace Bicycle{
 
     void push_back(T const & elem) {
       if (capacity > length) {
-        if (body == NULL)
-          body = new (memPool) T;
         body[length] = elem;
         ++length;
         return;
       }
-      capacity *= 2;
-      char *newMemPool = new char[sizeof(T) * capacity];
+      usInt newCapacity = capacity * 2;
+      char *newMemPool = new char[sizeof(T) * newCapacity];
       if (newMemPool == nullptr)
         throw std::runtime_error("Memory cannot be allocated.");
-      T *newBody = new (newMemPool) T;
+      T *newBody = reinterpret_cast<T*>(newMemPool);
       for (usInt i = 0; i < length; ++i)
         newBody[i] = body[i];
       newBody[length] = elem;
-      length++;
+      usInt newBodyLen = length + 1;
+      deinitialise();
       body = newBody;
-      delete []memPool;
+      length = newBodyLen;
       memPool = newMemPool;
+      capacity = newCapacity;
     }
 
     void pop_back() {
@@ -125,11 +123,7 @@ namespace Bicycle{
         return;
       }
       reserve(lengthReq); // If capacity is enough it won't do anything
-      if (body == NULL) {
-        body = new (memPool) T[lengthReq];
-        length = lengthReq;
-      } else
-        for (; length < lengthReq; body[length] = T(), ++length) {}
+      for (; length < lengthReq; body[length] = T(), ++length) {}
     }
 
     void reserve(unsigned int const capacityReq) {
@@ -138,42 +132,50 @@ namespace Bicycle{
       char *newMemPool = new char[sizeof(T) * capacityReq];
       if (newMemPool == nullptr)
         throw std::runtime_error("Memory cannot be allocated.");
-      T *newBody = new (newMemPool) T;
+      T *newBody = reinterpret_cast<T*>(newMemPool);
+      usInt const newLength = length;
       for (usInt i = 0; i < length; newBody[i] = body[i], ++i) {}
-      body = newBody;
+      deinitialise();
+      memPool = newMemPool;
       capacity = capacityReq;
-      delete []body;
       body = newBody;
+      length = newLength;
     }
 
     void shrink_to_fit() {
       char *newMemPool = new char[sizeof(T) * capacity];
       if (memPool == nullptr)
         throw std::runtime_error("Memory cannot be allocated.");
-      T *newBody = new (newMemPool) T;
+      T *newBody = reinterpret_cast<T*>(newMemPool);
+      usInt const newLength = length;
       for (usInt i = 0; i < length; newBody[i] = body[i], ++i) {}
         body = newBody;
-      capacity = length;
-      delete []body;
+      deinitialise();
+      memPool = newMemPool;
+      capacity = newLength;
+      length = newLength;
       body = newBody;
     }
 
     Container<T> & operator= (Container<T> const & other) {
-      for (usInt i = 0; i < length; ++i)
-        body[i].~T();
-      delete []memPool;
+      deinitialise();
       length = other.length;
       capacity = length + 1;
       memPool = new char[sizeof(T) * capacity];
       if (memPool == nullptr)
         throw std::runtime_error("Memory cannot be allocated.");
-      body = new (memPool) T;
+      body = reinterpret_cast<T*>(memPool);
       for (usInt i = 0; i < length; ++i)
         body[i] = other.body[i];
       return (*this);
     }
 
   private:
+    void deinitialise() {
+      clean();
+      delete []memPool;
+      capacity = 0;
+    }
     usInt length;
     usInt capacity;
     char *memPool;
