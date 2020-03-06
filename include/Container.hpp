@@ -143,7 +143,9 @@ namespace Bicycle{
     }
 
     void shrink_to_fit() {
-      char *newMemPool = new char[sizeof(T) * capacity];
+      if (capacity == length)
+	return;
+      char *newMemPool = new char[sizeof(T) * length];
       if (memPool == nullptr)
         throw std::runtime_error("Memory cannot be allocated.");
       T *newBody = reinterpret_cast<T*>(newMemPool);
