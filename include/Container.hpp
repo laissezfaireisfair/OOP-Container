@@ -146,12 +146,11 @@ namespace Bicycle{
       if (capacity == length)
 	return;
       char *newMemPool = new char[sizeof(T) * length];
-      if (memPool == nullptr)
+      if (newMemPool == nullptr)
         throw std::runtime_error("Memory cannot be allocated.");
-      T *newBody = reinterpret_cast<T*>(newMemPool);
       usInt const newLength = length;
-      for (usInt i = 0; i < length; newBody[i] = body[i], ++i) {}
-        body = newBody;
+      T *newBody = reinterpret_cast<T*>(newMemPool);
+      for (usInt i = 0; i < newLength; newBody[i] = body[i], ++i) {}
       deinitialise();
       memPool = newMemPool;
       capacity = newLength;
