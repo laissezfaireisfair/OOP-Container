@@ -13,7 +13,8 @@ class Container interface:
   bool is_empty() const;
   void push_back(T const & elem);
   void pop_back();
-  void clean();
-  void resize(unsigned int lengthReq);
-  void reserve(unsigned int capacityReq);
+  void clean(); // It does not affect capacity
+  void resize(unsigned int lengthReq); // It does not shorten capacity
+  void reserve(unsigned int capacityReq); // It does not shorten capacity
   void shrink_to_fit();
+  Container &operator= (Container const & other)
