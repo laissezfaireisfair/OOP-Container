@@ -26,8 +26,8 @@ namespace Bicycle{
 
     Container(T const & value, unsigned int const newLength) {
       alloc_body(newLength);
-      for (usInt i = 0; i < newLength; ++i)
-        body[i] = value;
+      for (length = 0; length < newLength; ++length)
+        body[length] = value;
     }
 
     ~Container() {
